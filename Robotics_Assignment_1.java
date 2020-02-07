@@ -140,30 +140,33 @@ public class Robotics_Assignment_1
         {
             PointPathGValue popped = heap.remove();
             Node point = popped.point;
-            if (point.equals(goal)) return popped.path;
-            int oldGValue = popped.gValue;
-            closed.add(point);
-            Iterator iter = point.getNeighborNodeIterator();
-            ArrayList<Node> children = new ArrayList<>();
-            while (iter.hasNext())
+            if (!closed.contains(point))
             {
-                Node check = (Node) iter.next();
-                if (!closed.contains(check))
-                {
-                    children.add(check);
-                }
-            }
-            for (Node child : children)
-            {
-                int newGValue = oldGValue + 1;
-                String[] pointStrings = point.getId().split("_");
-                int[] pointCoordinate = {Integer.parseInt(pointStrings[0]), Integer.parseInt(pointStrings[1])};
-                //int distanceToGoal = Math.abs(goalCoordinate[0] - pointCoordinate[0]) + Math.abs(goalCoordinate[1] - pointCoordinate[1]);
-                float distanceToGoal = (float) Math.sqrt(Math.pow(((float) goalCoordinate[0] - pointCoordinate[1]), 2) + Math.pow((float) (goalCoordinate[1] - pointCoordinate[1]), 2));
-                float newFValue = newGValue + distanceToGoal;
-                ArrayList<Node> newPath = (ArrayList<Node>) popped.path.clone();
-                newPath.add(child);
-                heap.add(new PointPathGValue(child, newPath, newGValue, newFValue));
+                    if (point.equals(goal)) return popped.path;
+                    int oldGValue = popped.gValue;
+                    closed.add(point);
+                    Iterator iter = point.getNeighborNodeIterator();
+                    ArrayList<Node> children = new ArrayList<>();
+                    while (iter.hasNext())
+                    {
+                        Node check = (Node) iter.next();
+                        if (!closed.contains(check))
+                        {
+                            children.add(check);
+                        }
+                    }
+                    for (Node child : children)
+                    {
+                        int newGValue = oldGValue + 1;
+                        String[] pointStrings = point.getId().split("_");
+                        int[] pointCoordinate = {Integer.parseInt(pointStrings[0]), Integer.parseInt(pointStrings[1])};
+                        //int distanceToGoal = Math.abs(goalCoordinate[0] - pointCoordinate[0]) + Math.abs(goalCoordinate[1] - pointCoordinate[1]);
+                        float distanceToGoal = (float) Math.sqrt(Math.pow(((float) goalCoordinate[0] - pointCoordinate[1]), 2) + Math.pow((float) (goalCoordinate[1] - pointCoordinate[1]), 2));
+                        float newFValue = newGValue + distanceToGoal;
+                        ArrayList<Node> newPath = (ArrayList<Node>) popped.path.clone();
+                        newPath.add(child);
+                        heap.add(new PointPathGValue(child, newPath, newGValue, newFValue));
+                    }
             }
         }
         return null;
